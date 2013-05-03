@@ -11,10 +11,6 @@ Page = Struct.new(:i, :path, :visitors) do
         visitors: visitors
     }.to_json(*a)
   end
-
-  def self.json_create(o)
-    new(o['i'], o['path'], o['visitors'])
-  end
 end
 
 def extract_results(raw)
@@ -44,7 +40,7 @@ get '/hotspots' do
   return 404 if toppages.empty? # No records found for this host
 
   earlier_results = extract_results(toppages[0..(toppages.length / 2 - 1)])
-  later_results = extract_results(toppages[(toppages.length / 2 - 1)..-1])
+  later_results = extract_results(toppages[(toppages.length / 2)..-1])
 
   later_results.values.each do |page|
     page.visitors -= earlier_results[page.path].visitors if earlier_results[page.path]

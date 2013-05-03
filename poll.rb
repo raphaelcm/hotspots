@@ -22,6 +22,8 @@ hosts = JSON.parse(HTTParty.get("https://s3.amazonaws.com/interview-files/hosts.
 
 scheduler = Rufus::Scheduler.start_new
 
+puts "Polling toppages every 5 seconds for: #{hosts.to_s}"
+
 hosts.each do |host|
   session = Moped::Session.new([ "127.0.0.1:27017" ])
   session.use "hotspots"
