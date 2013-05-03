@@ -20,10 +20,7 @@ end
 
 hosts = JSON.parse(HTTParty.get("https://s3.amazonaws.com/interview-files/hosts.json").body)
 
-scheduler = Rufus::Scheduler.start_new
-
-puts "Polling toppages every 5 seconds for: #{hosts.to_s}"
-
+# Create Collections
 hosts.each do |host|
   session = Moped::Session.new([ "127.0.0.1:27017" ])
   session.use "hotspots"
@@ -34,6 +31,13 @@ hosts.each do |host|
         max: 24, # maximum 24 records is 2 minutes of toppages (requesting every 5 seconds)
         size: 10485760) # 10 MB should be plenty when there's a limit of 24 documents per collection
   end
+end
+
+scheduler = Rufus::Scheduler.start_new
+
+puts "Polling toppages every 5 seconds for: #{hosts.to_s}"
+
+hosts.each do |host|
   scheduler.every '5s' do
     get_toppages(host)
   end
