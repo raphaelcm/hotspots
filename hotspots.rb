@@ -26,6 +26,8 @@ def extract_results(raw)
     end
   end
 
+  results.values.each{|v| v.visitors = v.visitors/raw.length} # Average across data points
+
   results
 end
 
